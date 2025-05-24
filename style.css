@@ -1,0 +1,92 @@
+/* Full Page Setup */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: url('https://digitalsynopsis.com/wp-content/uploads/2014/06/supercar-wallpapers-lamborghini-4.jpg') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Centered Glass Card */
+.glass-card {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 40px;
+    width: 90%;
+    max-width: 720px;
+    color: white;
+}
+
+/* Title Styling */
+.title {
+    font-size: 32px;
+    font-weight: 600;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* Form Structure */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Grouped Form Elements */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+select, input[type="text"], .btn-primary {
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    font-size: 15px;
+    width: 100%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Button Design */
+.btn-primary {
+    background-color: #00c2ff;
+    color: white;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0099cc;
+}
+
+/* Prediction Output */
+#prediction {
+    font-size: 24px;
+    font-weight: bold;
+    color: #00ffcc;
+    margin-top: 25px;
+    text-align: center;
+    text-shadow: 1px 1px 2px black;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .title {
+        font-size: 24px;
+    }
+
+    .glass-card {
+        padding: 30px 20px;
+    }
+}

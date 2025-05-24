@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Car Price Predictor</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" crossorigin="anonymous">
+
+    <!-- Custom Glassmorphism CSS -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: url('https://digitalsynopsis.com/wp-content/uploads/2014/06/supercar-wallpapers-lamborghini-4.jpg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 40px;
+            width: 90%;
+            max-width: 720px;
+            color: white;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        select, input[type="text"], .btn-primary {
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            font-size: 15px;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background-color: #00c2ff;
+            color: white;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0099cc;
+        }
+
+        #prediction {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00ffcc;
+            margin-top: 25px;
+            text-align: center;
+            text-shadow: 1px 1px 2px black;
+        }
+
+        @media (max-width: 600px) {
+            .title {
+                font-size: 24px;
+            }
+
+            .glass-card {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="glass-card">
+    <h1 class="title">🚗 Car Price Predictor</h1>
+
+    <form method="post" name="Modelform">
+        <div class="form-group">
+            <label><b>Select the company:</b></label>
+            <select id="company" name="company" required onchange="load_car_models(this.id,'car_models')">
+                {% for company in companies %}
+                <option value="{{ company }}">{{ company }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label><b>Select the model:</b></label>
+            <select id="car_models" name="car_models" required></select>
+        </div>
+
+        <div class="form-group">
+            <label><b>Select Year of Purchase:</b></label>
+            <select id="year" name="year" required>
+                {% for year in years %}
+                <option value="{{ year }}">{{ year }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label><b>Select the Fuel Type:</b></label>
+            <select id="fuel_type" name="fuel_type" required>
+                {% for fuel in fuel_types %}
+                <option value="{{ fuel }}">{{ fuel }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label><b>Enter Kilometers Driven:</b></label>
+            <input type="text" id="kilo_driven" name="kilo_driven" placeholder="e.g., 50000" required>
+        </div>
+
+        <div class="form-group">
+            <button type="button" class="btn btn-primary" onclick="send_data()">Predict Price</button>
+        </div>
+    </form>
+
+    <div id="prediction"></div>
+</div>
+
+<!-- JS for dynamic model loading -->
+<script>
+    function load_car_models(company_id, car_model_id) {
+        var company = document.getElementById(company_id);
+        var car_model = document.getElementById(car_model_id);
+        car_model.value = "";
+        car_model.innerHTML = "";
+
+        {% for company in companies %}
+        if (company.value == "{{ company }}") {
+            {% for model in car_models %}
+            {% if company in model %}
+            var newOption = document.createElement("option");
+            newOption.value = "{{ model }}";
+            newOption.innerHTML = "{{ model }}";
+            car_model.options.add(newOption);
+            {% endif %}
+            {% endfor %}
+        }
+        {% endfor %}
+    }
+
+    function send_data() {
+        var fd = new FormData(document.querySelector('form'));
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/predict', true);
+
+        document.getElementById('prediction').innerHTML = "⏳ Wait! Predicting Price...";
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                document.getElementById('prediction').innerHTML = "💰 Prediction: ₹" + xhr.responseText;
+            }
+        };
+
+        xhr.send(fd);
+    }
+</script>
+
+</body>
+</html>
